@@ -202,6 +202,112 @@ describe('Plugin tests', () => {
 })
 ```
 
+## Admin App Foundation
+
+This project includes a dedicated multi-tenant admin application built with Next.js App Router, Tailwind CSS, and Shadcn/ui components. The admin app is completely separate from the auto-generated Payload admin and is located at `/admin`.
+
+### Features
+
+- **Tenant-Aware Routing**: Routes organized by tenant slug (e.g., `/admin/tenant/[tenantSlug]`)
+- **Authentication**: HTTP-only cookie-based auth with middleware protection
+- **Styling**: Tailwind CSS with custom theme tokens and dark mode support
+- **UI Components**: Pre-built Shadcn/ui primitives (Button, Card, Input, Label, etc.)
+- **Theme Provider**: `next-themes` integration for theme switching
+
+### Getting Started
+
+1. Create `dev/.env` from `dev/.env.example`
+2. Set the required environment variables:
+   - `PAYLOAD_SERVER_URL`: Your Payload API URL
+   - `PAYLOAD_REST_PATH`: Payload API REST path
+   - `ADMIN_COOKIE_NAME`: Auth cookie name
+3. Run `pnpm dev` to start both Payload and the admin app
+
+### Project Structure
+
+The admin app structure is documented in [docs/admin/structure.md](docs/admin/structure.md). Key directories:
+
+- `dev/app/(admin)/` - Custom admin application (keep separate from Payload)
+- `dev/components/` - React components including UI primitives
+- `dev/lib/` - Utility functions
+- `dev/middleware.ts` - Auth cookie verification
+
+### Extending the Admin App
+
+The admin application can be extended with custom pages and components:
+
+```tsx
+// dev/app/(admin)/tenant/[tenantSlug]/products/page.tsx
+import { RouteGuard } from '@/components/RouteGuard'
+
+export default function ProductsPage() {
+  return (
+    <RouteGuard>
+      <h1>Products</h1>
+    </RouteGuard>
+  )
+}
+```
+
+All pages in `/admin` are protected by the middleware and RouteGuard components.
+
+### Deployment
+
+#### Docker Deployment
+
+Build and run the Docker image:
+
+```bash
+docker build -t payload-admin .
+docker run -p 3000:3000 \
+  -e DATABASE_URI=mongodb://... \
+  -e PAYLOAD_SECRET=your_secret \
+  -e PAYLOAD_SERVER_URL=https://yourdomain.com \
+  -e PAYLOAD_REST_PATH=/api/payload \
+  -e ADMIN_COOKIE_NAME=payload-token \
+  payload-admin
+```
+
+#### Vercel Deployment
+
+Deploy to Vercel using the included `vercel.json`:
+
+```bash
+pnpm install -g vercel
+vercel
+```
+
+The build process will:
+1. Install dependencies with `pnpm install`
+2. Build the plugin with `pnpm build`
+3. Generate Payload import map
+4. Deploy to Vercel with Next.js runtime
+
+Set environment variables in Vercel dashboard:
+- `DATABASE_URI`
+- `PAYLOAD_SECRET`
+- `PAYLOAD_SERVER_URL`
+- `PAYLOAD_REST_PATH`
+- `ADMIN_COOKIE_NAME`
+
+#### Build Commands
+
+Development:
+```bash
+pnpm dev              # Start dev server with Turbopack
+```
+
+Production:
+```bash
+pnpm build            # Build plugin and Next.js app
+pnpm start            # Start production server (if available)
+```
+
+Environment-specific builds:
+```bash
+NODE_ENV=production pnpm build
+```
+
 ## Best practices
 
 With this tutorial and the plugin template, you should have everything you need to start building your own plugin.
