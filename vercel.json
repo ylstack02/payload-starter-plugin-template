@@ -1,0 +1,23 @@
+{
+  "buildCommand": "pnpm build && pnpm run dev:generate-importmap",
+  "devCommand": "pnpm dev",
+  "env": {
+    "PAYLOAD_SERVER_URL": "@payload_server_url",
+    "PAYLOAD_REST_PATH": "@payload_rest_path",
+    "ADMIN_COOKIE_NAME": "@admin_cookie_name"
+  },
+  "functions": {
+    "dev/app/**": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  "framework": "nextjs",
+  "installCommand": "pnpm install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}

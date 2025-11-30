@@ -16,6 +16,9 @@ const nextConfig = {
     return webpackConfig
   },
   serverExternalPackages: ['mongodb-memory-server'],
+  experimental: {
+    cssLoading: 'concurrent',
+  },
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })

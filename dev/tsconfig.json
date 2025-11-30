@@ -19,6 +19,12 @@
       "@payload-config": [
         "./payload.config.ts"
       ],
+      "@/components/*": [
+        "./components/*"
+      ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
       "plugin-package-name-placeholder": [
         "../src/index.ts"
       ],
